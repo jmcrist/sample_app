@@ -16,7 +16,7 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
-   def create
+  def create
     @user = User.new(user_params)
     if @user.save
       sign_in @user
@@ -44,6 +44,20 @@ class UsersController < ApplicationController
     User.find(params[:id]).destroy
     flash[:success] = "User destroyed."
     redirect_to users_url
+  end
+
+  def following
+    @title = "Following"
+    @user = User.find(params[:id])
+    @users = @user.followed_users.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
+  def followers
+    @title = "Followers"
+    @user = User.find(params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    render 'show_follow'
   end
 
   private
